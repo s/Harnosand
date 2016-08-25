@@ -9,29 +9,27 @@
 import Foundation
 import Unbox
 
-struct Photo{
+struct Photo: Unboxable{
+    let identifier: String
+    let owner: String
     let title: String
-    let link: NSURL
-    let media: NSURL
-    let description: String
-    let published: NSDate
-    let author: String
-    let authorId: String
-    let tags: String
-}
-
-extension Photo: Unboxable{
+    let secret: String
+    let server: String
+    let farm: Int
+    let isPublic: Int
+    let isFriend: Int
+    let isFamily: Int
+    
     init(unboxer: Unboxer) {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZ"
-        
+        self.identifier = unboxer.unbox("id")
+        self.owner = unboxer.unbox("owner")
         self.title = unboxer.unbox("title")
-        self.link = unboxer.unbox("")
-        self.media = unboxer.unbox("")
-        self.description = unboxer.unbox("description")
-        self.published = unboxer.unbox("published", formatter: dateFormatter)
-        self.author = unboxer.unbox("author")
-        self.authorId = unboxer.unbox("author_id")
-        self.tags = unboxer.unbox("tags")
+        self.secret = unboxer.unbox("secret")
+        self.server = unboxer.unbox("server")
+        
+        self.farm = unboxer.unbox("farm")
+        self.isPublic = unboxer.unbox("ispublic")
+        self.isFriend = unboxer.unbox("isfriend")
+        self.isFamily = unboxer.unbox("isfamily")
     }
 }

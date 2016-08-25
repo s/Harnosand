@@ -9,13 +9,18 @@
 import Foundation
 import Unbox
 
-struct Feed{
-    var items:[Photo]
-    var page:Int = 1
-}
-
-extension Feed:Unboxable{
+struct Feed: Unboxable{
+    let page: Int
+    let pages: Int
+    let perpage: Int?
+    let total: Int?
+    let photos: [Photo]?
+    
     init(unboxer: Unboxer) {
-        self.items = unboxer.unbox("items")
+        self.page = unboxer.unbox("page")
+        self.pages = unboxer.unbox("pages")
+        self.perpage = unboxer.unbox("perpage")
+        self.total = unboxer.unbox("total")
+        self.photos = unboxer.unbox("photo")
     }
 }
