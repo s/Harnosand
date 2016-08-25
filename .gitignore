@@ -27,6 +27,9 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 
+# Custom Files
+Credentials.plist
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
