@@ -8,9 +8,16 @@
 
 import UIKit
 
-class FeedViewController: UIViewController {
+protocol FeedViewProtocol{
+    var presenter: FeedPresenter? { get set }
+}
 
+class FeedViewController: UIViewController, FeedViewProtocol {
+    var presenter: FeedPresenter?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.presenter = FeedPresenter(with: self)
+        presenter?.loadFeed()
     }
 }
