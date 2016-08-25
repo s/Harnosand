@@ -17,6 +17,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = NSLocalizedString("Photos", comment: "")
         self.presenter = FeedPresenter(with: self)
         presenter?.loadFeed()
     }
