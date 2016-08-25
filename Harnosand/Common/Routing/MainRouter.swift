@@ -24,6 +24,7 @@ class MainRouter: NSObject {
 extension MainRouter: MainRouterProtocol{
     func loadMainView() {
         let feedView = FeedViewController()
-        self.window.rootViewController = feedView
+        let navigationController = UINavigationController(rootViewController: feedView)
+        self.window.rootViewController = navigationController
     }
 }
