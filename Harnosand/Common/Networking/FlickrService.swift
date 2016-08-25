@@ -10,59 +10,39 @@ import Foundation
 import Alamofire
 import UnboxedAlamofire
 
-enum Result<T> {
+enum FlickrServiceResult<T>{
     case Success(T)
     case Failure(ErrorType)
 }
 
-typealias feedCompletionHandlerType = (Result<Feed>) -> Void
-
-enum FlickrServiceRouter: URLRequestConvertible{
-    static let baseURL = NSURL(string: "https://api.flickr.com/services")!
-    static var apiKey = ""
-    
-    case Feed
-    case Search(String)
-    
-    var URL: NSURL{
-        return FlickrServiceRouter.baseURL.URLByAppendingPathComponent(route.path)
-    }
-    
-    var route: (path: String, parameters: [String: AnyObject]?) {
-        switch self {
-        case .Feed:
-            return ("/feeds/photos_public.gne", nil)
-        case .Search(let q):
-            return ("/rest/", ["method":"flickr.photos.search", "api_key":FlickrServiceRouter.apiKey, "text":q])
-        }
-    }
-    
-    var method: Alamofire.Method{
-        return .GET
-    }
-    
-    var URLRequest: NSMutableURLRequest {
-        var defaultParameters: [String: AnyObject] = ["format":"json", "nojsoncallback":1]
-        if let parameters = route.parameters{
-            defaultParameters.unionInPlace(parameters)
-        }
-        let httpRequest = NSMutableURLRequest(URL: URL)
-        httpRequest.HTTPMethod = method.rawValue
-        httpRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        return Alamofire.ParameterEncoding.JSON.encode(httpRequest, parameters: defaultParameters).0
-    }
+enum FlickrServiceEndpoint: String{
+    case Feed = "flickr.photos.getRecent"
 }
 
 final class FlickrService{
     static let sharedService = FlickrService()
+    static let baseURL = NSURL(string: "https://api.flickr.com/services/rest")!
+    static var apiKey = ""
     
-    func getFeed(completion:feedCompletionHandlerType){
-        Alamofire.request(FlickrServiceRouter.Feed).responseObject{ (response: Response<Feed, NSError>) in
-            switch response.result{
+    private func flickrAPIRequest(withMethod method:Alamofire.Method, path: String, parameters:[String: AnyObject]?) -> Request{
+        let url = FlickrService.baseURL.URLByAppendingPathComponent(path)
+        let headers = ["Accept":"application/json", "Content-Type":"application/json"]
+        var combinedParameters: [String: AnyObject] = ["api_key":FlickrService.apiKey, "format":"json", "nojsoncallback":1]
+        if let parameters = parameters{
+            combinedParameters.unionInPlace(parameters)
+        }
+        return Alamofire.request(method, url, parameters: combinedParameters, encoding: .URL, headers: headers)
+    }
+    
+    func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->()){
+        let parameters: [String:AnyObject] = ["method":FlickrServiceEndpoint.Feed.rawValue, "perpage":10]
+        let path = "/"
+        self.flickrAPIRequest(withMethod:.GET, path: path, parameters: parameters).responseObject(keyPath:"photos") { (response:Response<Feed, NSError>) in
+            switch(response.result){
             case .Success(let value):
-                completion(Result.Success(value))
+                completion(FlickrServiceResult.Success(value))
             case .Failure(let error):
-                completion(Result.Failure(error))
+                completion(FlickrServiceResult.Failure(error))
             }
         }
     }

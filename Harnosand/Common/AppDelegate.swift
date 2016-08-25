@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if let credentials = NSDictionary(contentsOfFile: credentialsPath) as? Dictionary<String, AnyObject>{
             if let apiKey = credentials["apiKey"] as? String{
-                FlickrServiceRouter.apiKey = apiKey
+                FlickrService.apiKey = apiKey
             }else{
                 print("Can't find key: 'apiKey' in Credentials.plist")
             }
@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         router = MainRouter(with: window)
         router?.loadMainView()
+        
         return true
     }
 }
