@@ -1,0 +1,34 @@
+PODS:
+  - Alamofire (3.4.0)
+  - Unbox (1.9)
+  - UnboxedAlamofire (1.0):
+    - Alamofire (~> 3.0)
+    - Unbox (~> 1.5)
+
+DEPENDENCIES:
+  - Alamofire
+  - Unbox (from `https://github.com/JohnSundell/Unbox.git`)
+  - UnboxedAlamofire (from `https://github.com/serejahh/UnboxedAlamofire.git`)
+
+EXTERNAL SOURCES:
+  Unbox:
+    :git: https://github.com/JohnSundell/Unbox.git
+  UnboxedAlamofire:
+    :git: https://github.com/serejahh/UnboxedAlamofire.git
+
+CHECKOUT OPTIONS:
+  Unbox:
+    :commit: 43c38d141c674215ca54793870c1ed89b1071253
+    :git: https://github.com/JohnSundell/Unbox.git
+  UnboxedAlamofire:
+    :commit: eef896cb5e656fdbad1ab4aec0211b05c669114a
+    :git: https://github.com/serejahh/UnboxedAlamofire.git
+
+SPEC CHECKSUMS:
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  Unbox: a6f56a1682b5fd2ba6aea96d7b1ec17599db4f05
+  UnboxedAlamofire: 2ea3dee859523ef3f69646cf58a52974be36b506
+
+PODFILE CHECKSUM: 77a9ddc9378592c435dcb203be8d17993f123d4c
+
+COCOAPODS: 1.0.1
