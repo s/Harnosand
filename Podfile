@@ -7,8 +7,13 @@ target 'Harnosand' do
 
   # Pods for Harnosand
   pod 'Alamofire'
+  pod 'AlamofireImage', '~> 2.0'
+
   pod 'Unbox', :git => 'https://github.com/JohnSundell/Unbox.git'
   pod 'UnboxedAlamofire', :git => 'https://github.com/serejahh/UnboxedAlamofire.git'
+
   pod 'SnapKit'
   pod 'Reveal-iOS-SDK', :configurations => ['Debug']
+
+  pod 'NSDate+TimeAgo'
 end

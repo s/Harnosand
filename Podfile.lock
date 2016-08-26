@@ -1,5 +1,8 @@
 PODS:
   - Alamofire (3.4.0)
+  - AlamofireImage (2.4.0):
+    - Alamofire (~> 3.3)
+  - NSDate+TimeAgo (1.0.6)
   - Reveal-iOS-SDK (1.6.2)
   - SnapKit (0.20.0)
   - Unbox (1.9)
@@ -9,6 +12,8 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AlamofireImage (~> 2.0)
+  - NSDate+TimeAgo
   - Reveal-iOS-SDK
   - SnapKit
   - Unbox (from `https://github.com/JohnSundell/Unbox.git`)
@@ -30,11 +35,13 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  AlamofireImage: 87408b652e0f5ae5fe364035f15aea8b9b24c77e
+  NSDate+TimeAgo: 35601c619b2d59290055e4fe76e61d97677a2360
   Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
   SnapKit: 5fce3c1bbbf1fbd31de9aa92f33eb9fa03f15650
   Unbox: a6f56a1682b5fd2ba6aea96d7b1ec17599db4f05
   UnboxedAlamofire: 2ea3dee859523ef3f69646cf58a52974be36b506
 
-PODFILE CHECKSUM: 18c6cbce878530b9fe1f47dc0a8d0c305f6f2b24
+PODFILE CHECKSUM: 36d4157d0e43144f7b0fdcb1a2835959e0c05bdc
 
 COCOAPODS: 1.0.1
