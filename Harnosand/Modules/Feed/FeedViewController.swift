@@ -95,7 +95,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     }
     
     //MARK: UI Elements Creation
-    func addActivityIndicator(){
+    private func addActivityIndicator(){
         let indicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
         self.view.addSubview(indicator)
         indicator.snp_makeConstraints { (make) in
@@ -104,7 +104,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         self.activityIndicator = indicator
     }
     
-    func addMessageLabel(){
+    private func addMessageLabel(){
         let label = UILabel()
         label.textAlignment = .Center
         label.minimumScaleFactor = 0.8
@@ -117,7 +117,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         self.messageLabel = label
     }
     
-    func addSearchBar(){
+    private func addSearchBar(){
         let bar = UISearchBar()
         bar.tintColor = UIColor.cyanColor()
         
@@ -130,7 +130,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         self.searchBar = bar
     }
     
-    func addCollectionView(){
+    private func addCollectionView(){
         let collectionView = UICollectionView(frame:CGRectMake(0, 0, 0, 0), collectionViewLayout:UICollectionViewFlowLayout())
         collectionView.backgroundColor = UIColor.blueColor()
         
@@ -153,7 +153,8 @@ class FeedViewController: UIViewController, FeedViewProtocol {
 extension FeedViewController: UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(FeedCell), forIndexPath: indexPath) as! FeedCell
-        cell.backgroundColor = UIColor.blueColor()
+        let item = self.feedItems[indexPath.row]
+        cell.configureCell(with: item)
         return cell
     }
     
@@ -168,6 +169,15 @@ extension FeedViewController: UICollectionViewDelegate{
 
 extension FeedViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(CGRectGetWidth(self.view.frame), 250)
+        let item = self.feedItems[indexPath.row]
+        let viewWidth = Float(self.view.frame.width)
+        
+        if let itemWidth = item.width, itemHeight = item.height{
+            let cellHeight = (itemHeight * viewWidth) / itemWidth
+            return CGSizeMake(CGRectGetWidth(self.view.frame), CGFloat(cellHeight))
+        }else{
+            return CGSizeMake(CGRectGetWidth(self.view.frame), 250)
+        }
+        
     }
 }

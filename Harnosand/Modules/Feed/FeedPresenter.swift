@@ -44,6 +44,8 @@ class FeedPresenter{
                 self.feed = feed
                 if let photos = feed.photos{
                     self.view?.loadedItems(photos)
+                }else{
+                    self.view?.showMessage("An error occured")
                 }
             case .Failure(let error):
                 print(error)
