@@ -11,7 +11,7 @@ import Unbox
 
 struct Feed: Unboxable{
     let page: Int
-    let pages: Int
+    let pages: Int?
     let perpage: Int?
     let total: Int?
     let photos: [Photo]?
