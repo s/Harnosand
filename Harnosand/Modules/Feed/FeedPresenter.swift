@@ -11,10 +11,11 @@ import Foundation
 protocol FeedPresenterProtocol{
     weak var view: FeedViewController? { get set }
     
-    func loadFeed()
+    func loadFeedInitially()
+    func loadNextFeed()
 }
 
-class FeedPresenter: FeedPresenterProtocol{
+class FeedPresenter{
     weak var view: FeedViewController?
     var feed: Feed?
     var page: Int{
@@ -36,14 +37,28 @@ class FeedPresenter: FeedPresenterProtocol{
         self.view = view
     }
     
-    func loadFeed() {
-        FlickrService.sharedService.getFeed(page: nextPage) { (result:FlickrServiceResult<Feed>) in
+    private func loadFeed(withPage page:Int){
+        FlickrService.sharedService.getFeed(page: page) { (result:FlickrServiceResult<Feed>) in
             switch result{
             case .Success(let feed):
-                print(feed)
+                self.feed = feed
+                if let photos = feed.photos{
+                    self.view?.loadedItems(photos)
+                }
             case .Failure(let error):
                 print(error)
+                self.view?.showMessage("An error occured.")
             }
         }
+    }
+}
+
+extension FeedPresenter: FeedPresenterProtocol{
+    func loadFeedInitially() {
+        self.loadFeed(withPage: 0)
+    }
+    
+    func loadNextFeed() {
+        self.loadFeed(withPage: nextPage)
     }
 }
