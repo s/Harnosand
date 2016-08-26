@@ -37,7 +37,7 @@ final class FlickrService{
     func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->()){
         let parameters: [String:AnyObject] = ["method":FlickrServiceEndpoint.Feed.rawValue,
                                               "extras":"owner_name,date_taken,media,url_l",
-                                              "perpage":10,
+                                              "per_page":10,
                                               "page":page]
         let path = "/"
         self.flickrAPIRequest(withMethod:.GET, path: path, parameters: parameters).responseObject(keyPath:"photos") { (response:Response<Feed, NSError>) in
