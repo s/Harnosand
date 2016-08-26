@@ -25,10 +25,11 @@ class FeedCell: UICollectionViewCell{
     private var userLabel: UILabel?
     private var relativeDateLabel: UILabel?
     private var messageLabel: UILabel?
-    private var imageView: UIImageView?
+    private var cellImageView: UIImageView?
     private var userImageView: UIImageView?
     private var activityIndicator: UIActivityIndicatorView?
     
+    private var photo: Photo? = nil
     private var currentState: CellState?{
         didSet{
             if let state = currentState{
@@ -55,7 +56,7 @@ class FeedCell: UICollectionViewCell{
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.imageView?.image = nil
+        self.cellImageView?.image = nil
         self.userImageView?.image = nil
         
         self.userLabel?.text = ""
@@ -69,6 +70,7 @@ class FeedCell: UICollectionViewCell{
         self.createRelativeDateLabel()
         self.createUserLabel()
         self.createImageView()
+        self.createMessageLabel()
         
         self.createActivityIndicatorView()
     }
@@ -77,87 +79,98 @@ class FeedCell: UICollectionViewCell{
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func updateConstraints() {
+        super.updateConstraints()
+        
+    }
+    
     private func createUserImageView(){
         let userImageViewSize = 40.0
         
-        let imageView = UIImageView()
-        imageView.layer.cornerRadius = CGFloat(userImageViewSize / 2)
-        imageView.layer.masksToBounds = true
-        self.addSubview(imageView)
-        
-        imageView.snp_makeConstraints { (make) in
-            make.top.left.equalTo(10)
-            make.width.height.equalTo(userImageViewSize)
+        self.userImageView = UIImageView()
+        if let userImageView = self.userImageView{
+            userImageView.layer.cornerRadius = CGFloat(userImageViewSize / 2)
+            userImageView.layer.masksToBounds = true
+            self.addSubview(userImageView)
+            
+            userImageView.snp_makeConstraints { (make) in
+                make.top.left.equalTo(10)
+                make.width.height.equalTo(userImageViewSize)
+            }
+
         }
-        self.userImageView = imageView
     }
     
     private func createUserLabel(){
-        let label = UILabel()
-        label.minimumScaleFactor = 0.8
-        self.addSubview(label)
-        
-        label.snp_makeConstraints { (make) in
-            if let userImageView = self.userImageView, dateLabel = self.relativeDateLabel{
-                make.left.equalTo(userImageView.snp_right).offset(10)
-                make.right.equalTo(dateLabel.snp_left).offset(5)
-                make.height.equalTo(30)
-                make.centerY.equalTo(userImageView)
+        self.userLabel = UILabel()
+        if let userLabel = self.userLabel{
+            userLabel.minimumScaleFactor = 0.8
+            self.addSubview(userLabel)
+            
+            userLabel.snp_makeConstraints { (make) in
+                if let userImageView = self.userImageView, dateLabel = self.relativeDateLabel{
+                    make.left.equalTo(userImageView.snp_right).offset(10)
+                    make.right.equalTo(dateLabel.snp_left).inset(5)
+                    make.height.equalTo(40)
+                    make.centerY.equalTo(userImageView)
+                }
             }
         }
-        self.userLabel = label
     }
     
     private func createRelativeDateLabel(){
-        let label = UILabel()
-        label.textAlignment = .Right
-        self.addSubview(label)
-        
-        label.snp_makeConstraints { (make) in
-            if let userImageView = self.userImageView{
-                make.centerY.equalTo(userImageView)
+        self.relativeDateLabel = UILabel()
+        if let relativeDateLabel = self.relativeDateLabel{
+            relativeDateLabel.textAlignment = .Right
+            self.addSubview(relativeDateLabel)
+            
+            relativeDateLabel.snp_makeConstraints { (make) in
+                if let userImageView = self.userImageView{
+                    make.centerY.equalTo(userImageView)
+                }
+                make.right.equalTo(self).inset(10)
+                make.height.equalTo(40)
             }
-            make.right.equalTo(self).inset(10)
-            make.height.equalTo(30)
         }
-        
-        self.relativeDateLabel = label
     }
     
     private func createImageView(){
-        let imageView = UIImageView()
-        self.addSubview(imageView)
-        
-        imageView.snp_makeConstraints { (make) in
-            if let label = userLabel{
-                make.top.equalTo(label.snp_bottom).offset(20)
+        self.cellImageView = UIImageView()
+        if let cellImageView = self.cellImageView{
+            self.addSubview(cellImageView)
+            
+            cellImageView.snp_makeConstraints { (make) in
+                if let userLabel = self.userLabel{
+                    make.top.equalTo(userLabel.snp_bottom).offset(5)
+                }
+                make.left.right.equalTo(self)
             }
-            make.center.equalTo(self)
         }
-        self.imageView = imageView
     }
     
     private func createActivityIndicatorView(){
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-        self.addSubview(activityIndicator)
+        self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
         
-        activityIndicator.snp_makeConstraints { (make) in
-            make.center.equalTo(self)
+        if let activityIndicator = self.activityIndicator{
+            self.addSubview(activityIndicator)
+            activityIndicator.snp_makeConstraints { (make) in
+                make.center.equalTo(self)
+            }
         }
-        self.activityIndicator = activityIndicator
     }
     
     private func createMessageLabel(){
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.minimumScaleFactor = 0.8
-        self.addSubview(label)
-        
-        label.snp_makeConstraints { (make) in
-            make.center.equalTo(self)
-            make.width.equalTo(200)
+        self.messageLabel = UILabel()
+        if let messageLabel = self.messageLabel{
+            messageLabel.numberOfLines = 0
+            messageLabel.minimumScaleFactor = 0.8
+            self.addSubview(messageLabel)
+            
+            messageLabel.snp_makeConstraints { (make) in
+                make.center.equalTo(self)
+                make.width.equalTo(200)
+            }
         }
-        self.messageLabel = label
     }
     
     private func setImage(imageView: UIImageView, url: NSURL){
@@ -174,7 +187,7 @@ class FeedCell: UICollectionViewCell{
     }
     
     private func loadCellImage(with url:NSURL){
-        if let imageView = self.imageView{
+        if let imageView = self.cellImageView{
             self.setImage(imageView, url: url)
         }
     }
@@ -196,7 +209,7 @@ class FeedCell: UICollectionViewCell{
 
 extension FeedCell: FeedCellProtocol{
     func configureCell(with photo:Photo) {
-        
+        self.photo = photo
         self.backgroundColor = UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 1)
         self.loadPersonDetails(with: photo)
         if let dateLabel = relativeDateLabel, dateTaken = photo.dateTaken{
