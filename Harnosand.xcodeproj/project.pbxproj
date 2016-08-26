@@ -16,9 +16,11 @@
 		B33813CC1D6EF170003BB6A9 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33813CB1D6EF170003BB6A9 /* Feed.swift */; };
 		B33813CE1D6EF79C003BB6A9 /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33813CD1D6EF79C003BB6A9 /* FeedPresenter.swift */; };
 		B33813D01D6EFCA2003BB6A9 /* Credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */; };
+		B37CF08E1D6F7E5B004A63B7 /* CachedDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37CF08D1D6F7E5B004A63B7 /* CachedDateFormatter.swift */; };
 		B39CE8D21D6EE22C006A45C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39CE8D11D6EE22C006A45C8 /* AppDelegate.swift */; };
 		B39CE8D91D6EE22C006A45C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B39CE8D81D6EE22C006A45C8 /* Assets.xcassets */; };
 		B39CE8DC1D6EE22C006A45C8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B39CE8DA1D6EE22C006A45C8 /* LaunchScreen.storyboard */; };
+		B3C622641D705C9C00217FC6 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C622631D705C9C00217FC6 /* FeedCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,11 +34,13 @@
 		B33813CB1D6EF170003BB6A9 /* Feed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Feed.swift; path = Models/Feed.swift; sourceTree = "<group>"; };
 		B33813CD1D6EF79C003BB6A9 /* FeedPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
 		B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Credentials.plist; sourceTree = "<group>"; };
+		B37CF08D1D6F7E5B004A63B7 /* CachedDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedDateFormatter.swift; sourceTree = "<group>"; };
 		B39CE8CE1D6EE22C006A45C8 /* Harnosand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harnosand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39CE8D11D6EE22C006A45C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B39CE8D81D6EE22C006A45C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets/Assets.xcassets; sourceTree = "<group>"; };
 		B39CE8DB1D6EE22C006A45C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B39CE8DD1D6EE22C006A45C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3C622631D705C9C00217FC6 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		C126A99911A10F8BE4408126 /* Pods-Harnosand.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harnosand.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harnosand/Pods-Harnosand.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,13 +69,14 @@
 			children = (
 				B39CE8D11D6EE22C006A45C8 /* AppDelegate.swift */,
 				B33813B91D6EE3E6003BB6A9 /* Assets */,
+				B37CF08D1D6F7E5B004A63B7 /* CachedDateFormatter.swift */,
+				B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */,
 				B33813C51D6EEFD0003BB6A9 /* Extensions */,
 				B33813C81D6EF05B003BB6A9 /* Models */,
 				B33813C21D6EE827003BB6A9 /* Networking */,
 				B33813BF1D6EE53F003BB6A9 /* Routing */,
 				B33813B81D6EE332003BB6A9 /* Storyboards */,
 				B33813BA1D6EE3EE003BB6A9 /* Supporting Files */,
-				B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -113,6 +118,7 @@
 			children = (
 				B33813BD1D6EE507003BB6A9 /* FeedViewController.swift */,
 				B33813CD1D6EF79C003BB6A9 /* FeedPresenter.swift */,
+				B3C622631D705C9C00217FC6 /* FeedCell.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -357,10 +363,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B33813CA1D6EF0A4003BB6A9 /* Photo.swift in Sources */,
+				B3C622641D705C9C00217FC6 /* FeedCell.swift in Sources */,
 				B33813C71D6EEFE2003BB6A9 /* DictionaryExtensions.swift in Sources */,
 				B33813CE1D6EF79C003BB6A9 /* FeedPresenter.swift in Sources */,
 				B33813BE1D6EE507003BB6A9 /* FeedViewController.swift in Sources */,
 				B33813CC1D6EF170003BB6A9 /* Feed.swift in Sources */,
+				B37CF08E1D6F7E5B004A63B7 /* CachedDateFormatter.swift in Sources */,
 				B39CE8D21D6EE22C006A45C8 /* AppDelegate.swift in Sources */,
 				B33813C41D6EE989003BB6A9 /* FlickrService.swift in Sources */,
 				B33813C11D6EE559003BB6A9 /* MainRouter.swift in Sources */,
