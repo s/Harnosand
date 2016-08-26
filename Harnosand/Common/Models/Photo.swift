@@ -18,6 +18,16 @@ struct Photo: Unboxable{
     let url: NSURL?
     let width: Float?
     let height: Float?
+    var screenHeight: Float?{
+        get{
+            if let width = width, height = height{
+                let screenWidth = Float(UIScreen.mainScreen().bounds.width)
+                return (height * screenWidth) / width
+            }else{
+                return nil
+            }
+        }
+    }
     
     init(unboxer: Unboxer) {
         self.identifier = unboxer.unbox("id")

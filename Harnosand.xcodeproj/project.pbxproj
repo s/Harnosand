@@ -22,6 +22,7 @@
 		B39CE8DC1D6EE22C006A45C8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B39CE8DA1D6EE22C006A45C8 /* LaunchScreen.storyboard */; };
 		B3C622641D705C9C00217FC6 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C622631D705C9C00217FC6 /* FeedCell.swift */; };
 		B3C622681D70E67300217FC6 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C622671D70E67300217FC6 /* Person.swift */; };
+		B3D6F9D11D70FF0F00DAD692 /* FeedCellReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		B39CE8DD1D6EE22C006A45C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3C622631D705C9C00217FC6 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		B3C622671D70E67300217FC6 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Person.swift; path = Models/Person.swift; sourceTree = "<group>"; };
+		B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCellReusableView.swift; sourceTree = "<group>"; };
 		C126A99911A10F8BE4408126 /* Pods-Harnosand.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harnosand.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harnosand/Pods-Harnosand.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,6 +123,7 @@
 				B33813BD1D6EE507003BB6A9 /* FeedViewController.swift */,
 				B33813CD1D6EF79C003BB6A9 /* FeedPresenter.swift */,
 				B3C622631D705C9C00217FC6 /* FeedCell.swift */,
+				B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				B3C622681D70E67300217FC6 /* Person.swift in Sources */,
 				B33813BE1D6EE507003BB6A9 /* FeedViewController.swift in Sources */,
 				B33813CC1D6EF170003BB6A9 /* Feed.swift in Sources */,
+				B3D6F9D11D70FF0F00DAD692 /* FeedCellReusableView.swift in Sources */,
 				B37CF08E1D6F7E5B004A63B7 /* CachedDateFormatter.swift in Sources */,
 				B39CE8D21D6EE22C006A45C8 /* AppDelegate.swift in Sources */,
 				B33813C41D6EE989003BB6A9 /* FlickrService.swift in Sources */,
