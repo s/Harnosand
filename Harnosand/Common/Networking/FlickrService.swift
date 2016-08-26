@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import AlamofireImage
 import UnboxedAlamofire
 
 enum FlickrServiceResult<T>{
@@ -15,38 +16,77 @@ enum FlickrServiceResult<T>{
     case Failure(ErrorType)
 }
 
-enum FlickrServiceEndpoint: String{
+private enum FlickrServiceEndpoint: String{
     case Feed = "flickr.photos.getRecent"
+    case PersonInfo = "flickr.people.getInfo"
+}
+
+protocol FlickrServiceProtocol{
+    func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->())
+    func getImage(url url:NSURL, completion:(FlickrServiceResult<Image>)->Void)
+    func getOwner(of photo:Photo, completion:(FlickrServiceResult<Person>)->Void)
 }
 
 final class FlickrService{
     static let sharedService = FlickrService()
-    static let baseURL = NSURL(string: "https://api.flickr.com/services/rest")!
     static var apiKey = ""
+    private static let baseURL = NSURL(string: "https://api.flickr.com/services/rest")!
     
-    private func flickrAPIRequest(withMethod method:Alamofire.Method, path: String, parameters:[String: AnyObject]?) -> Request{
-        let url = FlickrService.baseURL.URLByAppendingPathComponent(path)
+    
+    private func flickrAPIRequest(withMethod method:Alamofire.Method, endpointURL: NSURL, parameters:[String: AnyObject]?) -> Request{
         let headers = ["Accept":"application/json", "Content-Type":"application/json"]
         var combinedParameters: [String: AnyObject] = ["api_key":FlickrService.apiKey, "format":"json", "nojsoncallback":1]
         if let parameters = parameters{
             combinedParameters.unionInPlace(parameters)
         }
-        return Alamofire.request(method, url, parameters: combinedParameters, encoding: .URL, headers: headers)
+        return Alamofire.request(method, endpointURL, parameters: combinedParameters, encoding: .URL, headers: headers)
     }
     
+    private func getEndpointURL(from path:String) -> NSURL{
+        let url = FlickrService.baseURL.URLByAppendingPathComponent(path)
+        return url
+    }
+    
+    private func getFlicrkServiceResult<T>(from response:Response<T, NSError>) -> FlickrServiceResult<T>{
+        switch(response.result){
+        case .Success(let value):
+            return FlickrServiceResult.Success(value)
+        case .Failure(let error):
+            return FlickrServiceResult.Failure(error)
+        }
+    }
+}
+
+extension FlickrService: FlickrServiceProtocol{
     func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->()){
         let parameters: [String:AnyObject] = ["method":FlickrServiceEndpoint.Feed.rawValue,
-                                              "extras":"owner_name,date_taken,media,url_l",
+                                              "extras":"owner_name,date_taken,media,url_c",
                                               "per_page":10,
                                               "page":page]
-        let path = "/"
-        self.flickrAPIRequest(withMethod:.GET, path: path, parameters: parameters).responseObject(keyPath:"photos") { (response:Response<Feed, NSError>) in
-            switch(response.result){
-            case .Success(let value):
-                completion(FlickrServiceResult.Success(value))
-            case .Failure(let error):
-                completion(FlickrServiceResult.Failure(error))
-            }
+        
+        let endpointURL = self.getEndpointURL(from: "/")
+        self.flickrAPIRequest(withMethod:.GET, endpointURL: endpointURL, parameters: parameters).responseObject(keyPath:"photos") { (response:Response<Feed, NSError>) in
+            completion(self.getFlicrkServiceResult(from: response))
+        }
+    }
+    
+    func getImage(url url:NSURL, completion:(FlickrServiceResult<UIImage>)->Void){
+        self.flickrAPIRequest(withMethod: .GET, endpointURL: url, parameters: nil).responseImage { (response:Response<Image, NSError>) in
+            completion(self.getFlicrkServiceResult(from: response))
+        }
+    }
+    
+    func getOwner(of photo:Photo, completion:(FlickrServiceResult<Person>)->Void){
+        guard let owner = photo.owner else {
+            print("Owner of photo is nil.")
+            return
+        }
+        let parameters: [String: AnyObject] = ["method":FlickrServiceEndpoint.PersonInfo.rawValue,
+                                               "user_id":owner]
+        
+        let endpointURL = self.getEndpointURL(from: "/")
+        self.flickrAPIRequest(withMethod: .GET, endpointURL: endpointURL, parameters: parameters).responseObject(keyPath:"person") { (response:Response<Person, NSError>) in
+            completion(self.getFlicrkServiceResult(from: response))
         }
     }
 }
