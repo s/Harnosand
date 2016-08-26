@@ -1,5 +1,7 @@
 PODS:
   - Alamofire (3.4.0)
+  - Reveal-iOS-SDK (1.6.2)
+  - SnapKit (0.20.0)
   - Unbox (1.9)
   - UnboxedAlamofire (1.0):
     - Alamofire (~> 3.0)
@@ -7,6 +9,8 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - Reveal-iOS-SDK
+  - SnapKit
   - Unbox (from `https://github.com/JohnSundell/Unbox.git`)
   - UnboxedAlamofire (from `https://github.com/serejahh/UnboxedAlamofire.git`)
 
@@ -26,9 +30,11 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
+  SnapKit: 5fce3c1bbbf1fbd31de9aa92f33eb9fa03f15650
   Unbox: a6f56a1682b5fd2ba6aea96d7b1ec17599db4f05
   UnboxedAlamofire: 2ea3dee859523ef3f69646cf58a52974be36b506
 
-PODFILE CHECKSUM: 196136dde7c85e6559ea18c43a16ba190f0f7889
+PODFILE CHECKSUM: 18c6cbce878530b9fe1f47dc0a8d0c305f6f2b24
 
 COCOAPODS: 1.0.1
