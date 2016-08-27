@@ -62,7 +62,7 @@ class FeedDataPresenter{
     }
     
     private func search(forKeyword keyword:String, page:Int){
-        FlickrService.sharedService.searchKeyword(keyword: keyword, page: page) { (response:FlickrServiceResult<Feed>) in
+        FlickrService.sharedService.search(keyword: keyword, page: page) { (response:FlickrServiceResult<Feed>) in
             self.feedCompletionHandler(response)
         }
     }

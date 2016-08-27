@@ -16,7 +16,6 @@ enum FlickrServiceResult<T>{
     case Failure(ErrorType)
 }
 
-
 private enum FlickrServiceEndpoint: String{
     case Feed = "flickr.photos.getRecent"
     case PersonInfo = "flickr.people.getInfo"
@@ -27,7 +26,7 @@ protocol FlickrServiceProtocol{
     func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->())
     func getImage(url url:NSURL, completion:(FlickrServiceResult<Image>)->Void)
     func getOwner(of photo:Photo, completion:(FlickrServiceResult<Person>)->Void)
-    func searchKeyword(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void)
+    func search(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void)
 }
 
 final class FlickrService{
@@ -93,7 +92,7 @@ extension FlickrService: FlickrServiceProtocol{
         }
     }
     
-    func searchKeyword(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void){
+    func search(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void){
         let parameters: [String: AnyObject] = ["method":FlickrServiceEndpoint.Search.rawValue,
                                                "text":q,
                                                "content_type":1,
