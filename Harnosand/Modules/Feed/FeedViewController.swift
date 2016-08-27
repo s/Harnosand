@@ -145,6 +145,8 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.registerClass(FeedCell.self, forCellWithReuseIdentifier: String(FeedCell))
+        collectionView.registerClass(FeedCellReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: String(FeedCellReusableView))
+
         collectionView.backgroundColor = UIColor.whiteColor()
         self.feedCollectionView = collectionView
     }
@@ -161,23 +163,45 @@ extension FeedViewController: UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.feedItems.count
     }
+    
+    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+        if kind == UICollectionElementKindSectionHeader{
+            return UICollectionReusableView()
+        }else{
+            let view: UICollectionReusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionFooter, withReuseIdentifier: String(FeedCellReusableView), forIndexPath: indexPath) as! FeedCellReusableView
+            if indexPath.row != self.feedItems.count{
+                view.hidden = true
+            }
+            return view
+        }
+    }
 }
 
 extension FeedViewController: UICollectionViewDelegate{
-    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == self.feedItems.count - 1{
+            self.presenter?.loadNextFeed()
+        }
+    }
 }
 
 extension FeedViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let item = self.feedItems[indexPath.row]
-        let viewWidth = Float(self.view.frame.width)
         
-        if let itemWidth = item.width, itemHeight = item.height{
-            let cellHeight = (itemHeight * viewWidth) / itemWidth
-            return CGSizeMake(CGRectGetWidth(self.view.frame), CGFloat(cellHeight))
+        if let cellHeight = item.screenHeight{
+            return CGSizeMake(CGRectGetWidth(self.view.frame), CGFloat(cellHeight) + 60)
         }else{
-            return CGSizeMake(CGRectGetWidth(self.view.frame), 250)
+            return CGSizeMake(CGRectGetWidth(self.view.frame), 100)
         }
         
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSizeMake(0, 0)
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSizeMake(CGRectGetWidth(self.view.frame), 50)
     }
 }
