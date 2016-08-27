@@ -48,7 +48,7 @@
 		B3C622671D70E67300217FC6 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Person.swift; path = Models/Person.swift; sourceTree = "<group>"; };
 		B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCellReusableView.swift; sourceTree = "<group>"; };
 		B3EFF5EC1D7239F600FEF370 /* FeedViewPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewPresenter.swift; sourceTree = "<group>"; };
-		B3EFF5EF1D72419E00FEF370 /* FeedCollectionViewHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedCollectionViewHandler.swift; path = Delegates/FeedCollectionViewHandler.swift; sourceTree = "<group>"; };
+		B3EFF5EF1D72419E00FEF370 /* FeedCollectionViewHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCollectionViewHandler.swift; sourceTree = "<group>"; };
 		C126A99911A10F8BE4408126 /* Pods-Harnosand.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harnosand.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harnosand/Pods-Harnosand.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,7 +124,7 @@
 		B33813BC1D6EE421003BB6A9 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
-				B3EFF5EE1D72412700FEF370 /* Delegates */,
+				B3EFF5EE1D72412700FEF370 /* Handlers */,
 				B3EFF5EB1D72358500FEF370 /* FeedCell */,
 				B33813CD1D6EF79C003BB6A9 /* FeedDataPresenter.swift */,
 				B33813BD1D6EE507003BB6A9 /* FeedViewController.swift */,
@@ -200,15 +200,15 @@
 				B3C622631D705C9C00217FC6 /* FeedCell.swift */,
 				B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */,
 			);
-			name = FeedCell;
+			path = FeedCell;
 			sourceTree = "<group>";
 		};
-		B3EFF5EE1D72412700FEF370 /* Delegates */ = {
+		B3EFF5EE1D72412700FEF370 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
 				B3EFF5EF1D72419E00FEF370 /* FeedCollectionViewHandler.swift */,
 			);
-			name = Delegates;
+			path = Handlers;
 			sourceTree = "<group>";
 		};
 		D40FAC34B5D27349079A57BD /* Pods */ = {
