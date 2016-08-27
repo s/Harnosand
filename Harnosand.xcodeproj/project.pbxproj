@@ -120,10 +120,9 @@
 		B33813BC1D6EE421003BB6A9 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
+				B3EFF5EB1D72358500FEF370 /* FeedCell */,
 				B33813BD1D6EE507003BB6A9 /* FeedViewController.swift */,
 				B33813CD1D6EF79C003BB6A9 /* FeedPresenter.swift */,
-				B3C622631D705C9C00217FC6 /* FeedCell.swift */,
-				B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -187,6 +186,15 @@
 				B33813BB1D6EE3F8003BB6A9 /* Modules */,
 			);
 			path = Harnosand;
+			sourceTree = "<group>";
+		};
+		B3EFF5EB1D72358500FEF370 /* FeedCell */ = {
+			isa = PBXGroup;
+			children = (
+				B3C622631D705C9C00217FC6 /* FeedCell.swift */,
+				B3D6F9D01D70FF0F00DAD692 /* FeedCellReusableView.swift */,
+			);
+			name = FeedCell;
 			sourceTree = "<group>";
 		};
 		D40FAC34B5D27349079A57BD /* Pods */ = {
