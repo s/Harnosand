@@ -57,7 +57,7 @@ class FeedPresenter{
 
 extension FeedPresenter: FeedPresenterProtocol{
     func loadFeedInitially() {
-        self.loadFeed(withPage: 0)
+        self.loadFeed(withPage: 1)
     }
     
     func loadNextFeed() {
