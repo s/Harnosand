@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct FeedCollectionViewHandlerConfiguration{
-    var items: [Photo]
+    let items: [Photo]
     let cellWidth: CGFloat
     let cellIdentifier: String
     let owner: FeedViewPresenter
@@ -23,9 +23,10 @@ protocol FeedCollectionViewHandlerProtocol{
 
 //MARK: Class: FeedCollectionViewHandler
 final class FeedCollectionViewHandler: NSObject, FeedCollectionViewHandlerProtocol{
-    private var cellWidth: CGFloat
+    private let cellWidth: CGFloat
+    private let cellIdentifier: String
+    
     private var items: [Photo] = []
-    private var cellIdentifier: String
     private weak var owner: FeedViewPresenter?
     
     init(with configuration:FeedCollectionViewHandlerConfiguration){
