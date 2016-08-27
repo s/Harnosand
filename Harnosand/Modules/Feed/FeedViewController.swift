@@ -192,7 +192,7 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout{
         if let cellHeight = item.screenHeight{
             return CGSizeMake(CGRectGetWidth(self.view.frame), CGFloat(cellHeight) + 60)
         }else{
-            return CGSizeMake(CGRectGetWidth(self.view.frame), 100)
+            return CGSizeMake(CGRectGetWidth(self.view.frame), 150)
         }
         
     }
@@ -203,5 +203,9 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout{
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSizeMake(CGRectGetWidth(self.view.frame), 50)
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 50
     }
 }
