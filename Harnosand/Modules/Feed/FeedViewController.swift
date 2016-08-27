@@ -13,7 +13,8 @@ enum ViewState{
     case Search
     case ContentLoaded
     case ShowingMessage
-    case ContentLoading
+    case ContentLoadingInitially
+    case ContentLoadingViaPullToRefresh
 }
 
 protocol FeedViewProtocol{
@@ -27,6 +28,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     //UI Elements
     private var messageLabel: UILabel? = nil
     private var searchBar: UISearchBar? = nil
+    private var refreshControl: UIRefreshControl? = nil
     private var feedCollectionView: UICollectionView? = nil
     private var activityIndicator: UIActivityIndicatorView? = nil
     
@@ -47,7 +49,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
                     self.activityIndicator?.hidden = true
                     self.feedCollectionView?.hidden = true
                     
-                case .ContentLoading:
+                case .ContentLoadingInitially, .ContentLoadingViaPullToRefresh:
                     self.activityIndicator?.hidden = false
                     self.feedCollectionView?.hidden = true
                     self.activityIndicator?.startAnimating()
@@ -67,10 +69,18 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         self.addActivityIndicator()
         self.addSearchBar()
         self.addCollectionView()
+        self.addRefreshControl()
         
-        self.currentState = ViewState.ContentLoading
+        self.currentState = ViewState.ContentLoadingInitially
         self.presenter = FeedPresenter(with: self)
         presenter?.loadFeedInitially()
+    }
+    
+    //MARK: Private Helper Methods
+    
+    @objc private func startRefreshing(){
+        self.currentState = ViewState.ContentLoadingViaPullToRefresh
+        self.presenter?.loadFeedInitially()
     }
     
     //MARK: FeedViewProtocol Methods
@@ -81,17 +91,22 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     }
     
     func loadedItems(newItems: [Photo]) {
-        let itemCount = self.feedItems.count
-        let indexPaths: [NSIndexPath] = Array(itemCount ..< itemCount + newItems.count).map { (index) -> NSIndexPath in
-            return NSIndexPath(forRow: index, inSection: 0)
+        
+        if self.currentState == ViewState.ContentLoadingViaPullToRefresh{
+            self.refreshControl?.endRefreshing()
+            self.feedItems = newItems
+        }else{
+            let itemCount = self.feedItems.count
+            let indexPaths: [NSIndexPath] = Array(itemCount ..< itemCount + newItems.count).map { (index) -> NSIndexPath in
+                return NSIndexPath(forRow: index, inSection: 0)
+            }
+            
+            self.feedItems.appendContentsOf(newItems)
+            self.feedCollectionView?.performBatchUpdates({
+                self.feedCollectionView?.insertItemsAtIndexPaths(indexPaths)
+            }, completion: nil)
         }
-        
         self.currentState = ViewState.ContentLoaded
-        self.feedItems.appendContentsOf(newItems)
-        self.feedCollectionView?.performBatchUpdates({ 
-            self.feedCollectionView?.insertItemsAtIndexPaths(indexPaths)
-        }, completion: nil)
-        
     }
     
     //MARK: UI Elements Creation
@@ -149,6 +164,16 @@ class FeedViewController: UIViewController, FeedViewProtocol {
 
         collectionView.backgroundColor = UIColor.whiteColor()
         self.feedCollectionView = collectionView
+    }
+    
+    private func addRefreshControl(){
+        self.refreshControl = UIRefreshControl()
+        if let refreshControl = self.refreshControl{
+            refreshControl.tintColor = UIColor.grayColor()
+            refreshControl.addTarget(self, action: #selector(FeedViewController.startRefreshing), forControlEvents: UIControlEvents.ValueChanged)
+            self.feedCollectionView?.addSubview(refreshControl)
+            self.feedCollectionView?.alwaysBounceVertical = true
+        }
     }
 }
 
