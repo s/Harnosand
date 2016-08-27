@@ -16,15 +16,18 @@ enum FlickrServiceResult<T>{
     case Failure(ErrorType)
 }
 
+
 private enum FlickrServiceEndpoint: String{
     case Feed = "flickr.photos.getRecent"
     case PersonInfo = "flickr.people.getInfo"
+    case Search = "flickr.photos.search"
 }
 
 protocol FlickrServiceProtocol{
     func getFeed(page page:Int, completion:(FlickrServiceResult<Feed>)->())
     func getImage(url url:NSURL, completion:(FlickrServiceResult<Image>)->Void)
     func getOwner(of photo:Photo, completion:(FlickrServiceResult<Person>)->Void)
+    func searchKeyword(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void)
 }
 
 final class FlickrService{
@@ -86,6 +89,20 @@ extension FlickrService: FlickrServiceProtocol{
         
         let endpointURL = self.getEndpointURL(from: "/")
         self.flickrAPIRequest(withMethod: .GET, endpointURL: endpointURL, parameters: parameters).responseObject(keyPath:"person") { (response:Response<Person, NSError>) in
+            completion(self.getFlicrkServiceResult(from: response))
+        }
+    }
+    
+    func searchKeyword(keyword q:String, page:Int, completion:(FlickrServiceResult<Feed>)->Void){
+        let parameters: [String: AnyObject] = ["method":FlickrServiceEndpoint.Search.rawValue,
+                                               "text":q,
+                                               "content_type":1,
+                                               "media":"photos",
+                                               "extras":"owner_name,date_taken,media,url_c",
+                                               "per_page":10,
+                                               "page":page]
+        let endpointURL = self.getEndpointURL(from: "/")
+        self.flickrAPIRequest(withMethod: .GET, endpointURL: endpointURL, parameters: parameters).responseObject(keyPath:"photos"){ (response:Response<Feed, NSError>) in
             completion(self.getFlicrkServiceResult(from: response))
         }
     }
