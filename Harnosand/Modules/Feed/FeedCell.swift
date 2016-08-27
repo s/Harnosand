@@ -115,31 +115,27 @@ class FeedCell: UICollectionViewCell{
     
     private func createUserLabel(){
         self.userLabel = UILabel()
-        if let userLabel = self.userLabel{
+        if let userLabel = self.userLabel, userImageView = self.userImageView, dateLabel = self.relativeDateLabel{
             userLabel.minimumScaleFactor = 0.8
             self.addSubview(userLabel)
             
             userLabel.snp_makeConstraints { (make) in
-                if let userImageView = self.userImageView, dateLabel = self.relativeDateLabel{
-                    make.left.equalTo(userImageView.snp_right).offset(10)
-                    make.right.equalTo(dateLabel.snp_left).inset(5)
-                    make.height.equalTo(40)
-                    make.centerY.equalTo(userImageView)
-                }
+                make.left.equalTo(userImageView.snp_right).offset(10)
+                make.right.equalTo(dateLabel.snp_left).inset(5)
+                make.height.equalTo(40)
+                make.centerY.equalTo(userImageView)
             }
         }
     }
     
     private func createRelativeDateLabel(){
         self.relativeDateLabel = UILabel()
-        if let relativeDateLabel = self.relativeDateLabel{
+        if let relativeDateLabel = self.relativeDateLabel, userImageView = self.userImageView{
             relativeDateLabel.textAlignment = .Right
             self.addSubview(relativeDateLabel)
             
             relativeDateLabel.snp_makeConstraints { (make) in
-                if let userImageView = self.userImageView{
-                    make.centerY.equalTo(userImageView)
-                }
+                make.centerY.equalTo(userImageView)
                 make.right.equalTo(self).inset(10)
                 make.height.equalTo(40)
             }
@@ -148,13 +144,12 @@ class FeedCell: UICollectionViewCell{
     
     private func createImageView(){
         self.cellImageView = UIImageView()
-        if let cellImageView = self.cellImageView{
+        if let cellImageView = self.cellImageView, userLabel = self.userLabel{
+            cellImageView.contentMode = .ScaleAspectFit
             self.addSubview(cellImageView)
             
             cellImageView.snp_makeConstraints { (make) in
-                if let userLabel = self.userLabel{
-                    make.top.equalTo(userLabel.snp_bottom).offset(5)
-                }
+                make.top.equalTo(userLabel.snp_bottom).offset(5)
                 make.left.right.equalTo(self)
             }
         }
