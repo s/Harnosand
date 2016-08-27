@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 
 enum ViewState{
-    case Search
     case ContentLoaded
     case ShowingMessage
     case ContentLoadingInitially
@@ -24,16 +23,20 @@ protocol FeedViewProtocol{
     func loadedItems(newItems: [Photo])
 }
 
+//MARK: Class: FeedViewController
 class FeedViewController: UIViewController, FeedViewProtocol {
-    //UI Elements
+    
+    //MARK: UI Element Properties
     private var messageLabel: UILabel? = nil
     private var searchBar: UISearchBar? = nil
     private var refreshControl: UIRefreshControl? = nil
     private var feedCollectionView: UICollectionView? = nil
     private var activityIndicator: UIActivityIndicatorView? = nil
     
-    //Other Properties
+    //MARK: FeedViewProtocol Properties
     var presenter: FeedPresenter?
+    
+    //MARK: Other Properties
     private var feedItems: [Photo] = []
     private var currentState: ViewState?{
         didSet{
@@ -53,14 +56,12 @@ class FeedViewController: UIViewController, FeedViewProtocol {
                     self.activityIndicator?.hidden = false
                     self.feedCollectionView?.hidden = true
                     self.activityIndicator?.startAnimating()
-                    
-                default:
-                    print("Not implemented yet.")
                 }
             }
         }
     }
     
+    //MARK: ViewController Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("Photos", comment: "")
@@ -91,7 +92,6 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     }
     
     func loadedItems(newItems: [Photo]) {
-        
         if self.currentState == ViewState.ContentLoadingViaPullToRefresh{
             self.refreshControl?.endRefreshing()
             self.feedItems = newItems
@@ -177,6 +177,7 @@ class FeedViewController: UIViewController, FeedViewProtocol {
     }
 }
 
+//MARK: Extension UICollectionViewDataSource Methods
 extension FeedViewController: UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(FeedCell), forIndexPath: indexPath) as! FeedCell
@@ -202,6 +203,7 @@ extension FeedViewController: UICollectionViewDataSource{
     }
 }
 
+//MARK: Extension: UICollectionViewDelegate Methods
 extension FeedViewController: UICollectionViewDelegate{
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.row == self.feedItems.count - 1{
@@ -210,6 +212,7 @@ extension FeedViewController: UICollectionViewDelegate{
     }
 }
 
+//MARK: Extension: UICollectionViewDelegateFlowLayout Methods
 extension FeedViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let item = self.feedItems[indexPath.row]
