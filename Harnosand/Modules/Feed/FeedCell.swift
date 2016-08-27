@@ -12,9 +12,10 @@ import SnapKit
 import NSDate_TimeAgo
 
 enum CellState{
-    case LoadedWithNoImageURL
-    case LoadedOK
-    case Loading
+    case LoadedDataWithNoImageURL
+    case LoadedImageWithError
+    case LoadedDataOK
+    case LoadingData
 }
 
 protocol FeedCellProtocol{
@@ -30,24 +31,32 @@ class FeedCell: UICollectionViewCell{
     private var activityIndicator: UIActivityIndicatorView?
     
     private var photo: Photo? = nil
+    private var person: Person? = nil
+    
+    private var previousState: CellState?
     private var currentState: CellState?{
+        willSet{
+            self.previousState = currentState
+        }
         didSet{
-            if let state = currentState{
+            if let state = currentState, messageLabel = self.messageLabel, userImageView = self.userImageView, activityIndicator = self.activityIndicator{
                 switch state{
-                case .Loading:
-                    self.messageLabel?.hidden = true
-                    self.activityIndicator?.startAnimating()
-                    self.activityIndicator?.hidden = false
+                case .LoadingData:
+                    messageLabel.hidden = true
+                    activityIndicator.startAnimating()
+                    activityIndicator.hidden = false
                     
-                case .LoadedOK:
-                    self.userImageView?.hidden = false
-                    self.messageLabel?.hidden = true
-                    self.activityIndicator?.stopAnimating()
-                    self.activityIndicator?.hidden = true
+                case .LoadedDataOK:
+                    userImageView.hidden = false
+                    messageLabel.hidden = true
+                    activityIndicator.stopAnimating()
+                    activityIndicator.hidden = true
                     
-                case .LoadedWithNoImageURL:
-                    self.userImageView?.hidden = true
-                    self.messageLabel?.hidden = false
+                case .LoadedDataWithNoImageURL, .LoadedImageWithError:
+                    activityIndicator.hidden = true
+                    userImageView.hidden = true
+                    messageLabel.hidden = false
+                    messageLabel.text = NSLocalizedString("There was an error while loading this image.", comment: "")
                 }
             }
         }
@@ -55,6 +64,9 @@ class FeedCell: UICollectionViewCell{
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        self.activityIndicator?.hidden = false
+        self.messageLabel?.hidden = true
         
         self.cellImageView?.image = nil
         self.userImageView?.image = nil
@@ -162,64 +174,80 @@ class FeedCell: UICollectionViewCell{
     private func createMessageLabel(){
         self.messageLabel = UILabel()
         if let messageLabel = self.messageLabel{
-            messageLabel.numberOfLines = 0
-            messageLabel.minimumScaleFactor = 0.8
+            messageLabel.numberOfLines = 2
+            messageLabel.minimumScaleFactor = 0.75
+            messageLabel.textAlignment = .Center
+            messageLabel.hidden = true
             self.addSubview(messageLabel)
             
             messageLabel.snp_makeConstraints { (make) in
                 make.center.equalTo(self)
-                make.width.equalTo(200)
+                make.width.equalTo(self).inset(20)
+                make.bottom.equalTo(self.snp_bottom)
             }
         }
     }
     
     private func setImage(imageView: UIImageView, url: NSURL){
-        self.currentState = CellState.Loading
+        self.currentState = CellState.LoadingData
+        
         FlickrService.sharedService.getImage(url: url) { (response:FlickrServiceResult<UIImage>) in
-            self.currentState = CellState.LoadedOK
-            switch response{
-            case .Success(let image):
-                imageView.image = image
-            case .Failure(let error):
-                print(error)
+            if let photoURL = self.photo?.url, userImageURL = self.person?.profileImageURL{
+                if url == photoURL || url == userImageURL{
+                    switch response{
+                    case .Success(let image):
+                        self.currentState = CellState.LoadedDataOK
+                        imageView.image = image
+                    case .Failure(let error):
+                        self.currentState = CellState.LoadedImageWithError
+                        print(error)
+                    }
+                }else{
+                    self.currentState = self.previousState
+                }
+            }else{
+                self.currentState = self.previousState
             }
         }
     }
     
-    private func loadCellImage(with url:NSURL){
-        if let imageView = self.cellImageView{
-            self.setImage(imageView, url: url)
-        }
-    }
-    
-    private func loadPersonDetails(with photo:Photo){
-        if let userImageView = self.userImageView{
-            FlickrService.sharedService.getOwner(of: photo, completion: { (response:FlickrServiceResult<Person>) in
-                switch response{
-                case .Success(let person):
-                    self.userLabel?.text = person.username
-                    self.setImage(userImageView, url: person.profileImageURL)
-                case .Failure(let error):
-                    print(error)
-                }
-            })
-        }
+    private func loadPersonDetails(with photo:Photo, completion:(FlickrServiceResult<Person>)->Void){
+        FlickrService.sharedService.getOwner(of: photo, completion: { (response:FlickrServiceResult<Person>) in
+            if let selfPhoto = self.photo where selfPhoto.identifier == photo.identifier{
+                completion(response)
+            }
+        })
     }
 }
 
 extension FeedCell: FeedCellProtocol{
     func configureCell(with photo:Photo) {
-        self.photo = photo
         self.backgroundColor = UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 1)
-        self.loadPersonDetails(with: photo)
+        self.photo = photo
+        
+        self.loadPersonDetails(with: photo) { (response:FlickrServiceResult<Person>) in
+            switch response{
+            case .Success(let person):
+                self.person = person
+                self.userLabel?.text = person.username
+                if let userImageView = self.userImageView{
+                    self.setImage(userImageView, url: person.profileImageURL)
+                }
+            case .Failure(let error):
+                print(error)
+            }
+        }
+        
         if let dateLabel = relativeDateLabel, dateTaken = photo.dateTaken{
             dateLabel.text = dateTaken.timeAgo()
         }
-        if let url = photo.url{
-            self.loadCellImage(with: url)
+        
+        if let url = photo.url where url != ""{
+            if let cellImageView = self.cellImageView{
+                self.setImage(cellImageView, url: url)
+            }
         }else{
-            self.currentState = CellState.LoadedWithNoImageURL
-            self.messageLabel?.text = NSLocalizedString("No url found for this time. Sorry.", comment: "")
+            self.currentState = CellState.LoadedDataWithNoImageURL
         }
     }
 }
