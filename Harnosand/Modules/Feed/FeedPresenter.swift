@@ -13,6 +13,9 @@ protocol FeedPresenterProtocol{
     
     func loadFeedInitially()
     func loadNextFeed()
+    
+    func searchInitially(forKeyword keyword:String)
+    func searchNextPage(forKeyword keyword:String)
 }
 
 class FeedPresenter{
@@ -37,20 +40,30 @@ class FeedPresenter{
         self.view = view
     }
     
-    private func loadFeed(withPage page:Int){
-        FlickrService.sharedService.getFeed(page: page) { (result:FlickrServiceResult<Feed>) in
-            switch result{
-            case .Success(let feed):
-                self.feed = feed
-                if let photos = feed.photos{
-                    self.view?.loadedItems(photos)
-                }else{
-                    self.view?.showMessage("An error occured")
-                }
-            case .Failure(let error):
-                print(error)
-                self.view?.showMessage("An error occured.")
+    private func feedCompletionHandler(response:FlickrServiceResult<Feed>){
+        switch response{
+        case .Success(let feed):
+            self.feed = feed
+            if let photos = feed.photos{
+                self.view?.loadedItems(photos)
+            }else{
+                self.view?.showMessage("An error occured")
             }
+        case .Failure(let error):
+            print(error)
+            self.view?.showMessage("An error occured.")
+        }
+    }
+    
+    private func loadFeed(withPage page:Int){
+        FlickrService.sharedService.getFeed(page: page) { (response:FlickrServiceResult<Feed>) in
+            self.feedCompletionHandler(response)
+        }
+    }
+    
+    private func search(forKeyword keyword:String, page:Int){
+        FlickrService.sharedService.searchKeyword(keyword: keyword, page: page) { (response:FlickrServiceResult<Feed>) in
+            self.feedCompletionHandler(response)
         }
     }
 }
@@ -62,5 +75,13 @@ extension FeedPresenter: FeedPresenterProtocol{
     
     func loadNextFeed() {
         self.loadFeed(withPage: nextPage)
+    }
+    
+    func searchInitially(forKeyword keyword:String){
+        self.search(forKeyword: keyword, page: 1)
+    }
+    
+    func searchNextPage(forKeyword keyword: String) {
+        self.search(forKeyword: keyword, page: nextPage)
     }
 }
