@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol FeedPresenterProtocol{
+protocol FeedDataPresenterProtocol{
     weak var view: FeedViewController? { get set }
     
     func loadFeedInitially()
@@ -18,7 +18,7 @@ protocol FeedPresenterProtocol{
     func searchNextPage(forKeyword keyword:String)
 }
 
-class FeedPresenter{
+class FeedDataPresenter{
     weak var view: FeedViewController?
     var feed: Feed?
     var page: Int{
@@ -68,7 +68,7 @@ class FeedPresenter{
     }
 }
 
-extension FeedPresenter: FeedPresenterProtocol{
+extension FeedDataPresenter: FeedDataPresenterProtocol{
     func loadFeedInitially() {
         self.loadFeed(withPage: 1)
     }
