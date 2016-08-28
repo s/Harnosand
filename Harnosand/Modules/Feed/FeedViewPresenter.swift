@@ -17,7 +17,6 @@ protocol FeedViewPresenterProtocol{
     func createElements()
     func showMessage(message: String)
     func showItems(items: [Photo])
-    func pullToRefreshTriggered()
     func willDisplayLastElementOfFeed()
     func searchBarTextDidChange(text:String)
     func searchCancelled()
