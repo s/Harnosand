@@ -16,6 +16,7 @@
 		B33813CC1D6EF170003BB6A9 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33813CB1D6EF170003BB6A9 /* Feed.swift */; };
 		B33813CE1D6EF79C003BB6A9 /* FeedDataPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33813CD1D6EF79C003BB6A9 /* FeedDataPresenter.swift */; };
 		B33813D01D6EFCA2003BB6A9 /* Credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */; };
+		B36A05201D72560E00F5480F /* FeedSearchBarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36A051F1D72560E00F5480F /* FeedSearchBarHandler.swift */; };
 		B37CF08E1D6F7E5B004A63B7 /* CachedDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37CF08D1D6F7E5B004A63B7 /* CachedDateFormatter.swift */; };
 		B39CE8D21D6EE22C006A45C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39CE8D11D6EE22C006A45C8 /* AppDelegate.swift */; };
 		B39CE8D91D6EE22C006A45C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B39CE8D81D6EE22C006A45C8 /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 		B33813CB1D6EF170003BB6A9 /* Feed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Feed.swift; path = Models/Feed.swift; sourceTree = "<group>"; };
 		B33813CD1D6EF79C003BB6A9 /* FeedDataPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDataPresenter.swift; sourceTree = "<group>"; };
 		B33813CF1D6EFCA2003BB6A9 /* Credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Credentials.plist; sourceTree = "<group>"; };
+		B36A051F1D72560E00F5480F /* FeedSearchBarHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedSearchBarHandler.swift; sourceTree = "<group>"; };
 		B37CF08D1D6F7E5B004A63B7 /* CachedDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedDateFormatter.swift; sourceTree = "<group>"; };
 		B39CE8CE1D6EE22C006A45C8 /* Harnosand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harnosand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39CE8D11D6EE22C006A45C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				B3EFF5EF1D72419E00FEF370 /* FeedCollectionViewHandler.swift */,
+				B36A051F1D72560E00F5480F /* FeedSearchBarHandler.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				B33813C71D6EEFE2003BB6A9 /* DictionaryExtensions.swift in Sources */,
 				B33813CE1D6EF79C003BB6A9 /* FeedDataPresenter.swift in Sources */,
 				B3C622681D70E67300217FC6 /* Person.swift in Sources */,
+				B36A05201D72560E00F5480F /* FeedSearchBarHandler.swift in Sources */,
 				B33813BE1D6EE507003BB6A9 /* FeedViewController.swift in Sources */,
 				B33813CC1D6EF170003BB6A9 /* Feed.swift in Sources */,
 				B3D6F9D11D70FF0F00DAD692 /* FeedCellReusableView.swift in Sources */,

@@ -19,14 +19,17 @@ protocol FeedViewPresenterProtocol{
     func showItems(items: [Photo])
     func pullToRefreshTriggered()
     func willDisplayLastElementOfFeed()
+    func searchBarTextDidChange(text:String)
+    func searchCancelled()
 }
 
 //MARK: ViewState Enum
 private enum ViewState{
     case ContentLoaded
     case ShowingMessage
+    case ContentLoadingViaSearch
     case ContentLoadingInitially
-    case ContentLoadingViaPullToRefresh
+    case ContentLoadingViaScroll
 }
 
 //MARK: FeedViewPresenterUICreationProtocol
@@ -53,6 +56,7 @@ class FeedViewPresenter{
     
     //MARK: Handler Properties
     private var collectionViewHandler: FeedCollectionViewHandler?
+    private var searchBarHandler: FeedSearchBarHandler?
     
     //MARK: Other Properties
     private var areElementsCreated: Bool = false
@@ -76,10 +80,13 @@ class FeedViewPresenter{
                     self.activityIndicator?.hidden = true
                     self.feedCollectionView?.hidden = true
                     
-                case .ContentLoadingInitially, .ContentLoadingViaPullToRefresh:
-                    self.activityIndicator?.hidden = false
+                case .ContentLoadingInitially, .ContentLoadingViaSearch:
                     self.feedCollectionView?.hidden = true
+                    self.feedCollectionView?.scrollToItemAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), atScrollPosition: .Top, animated: false)
+                    self.activityIndicator?.hidden = false
                     self.activityIndicator?.startAnimating()
+                
+                default: break
                 }
             }
         }
@@ -92,22 +99,25 @@ class FeedViewPresenter{
     }
     
     @objc internal func pullToRefreshTriggered() {
-        self.currentState = ViewState.ContentLoadingViaPullToRefresh
+        self.currentState = ViewState.ContentLoadingInitially
         self.controller?.pullToRefreshTriggered()
     }
 }
 
 extension FeedViewPresenter: FeedViewPresenterProtocol{
-    
     func createElements() {
         if self.areElementsCreated{
             return
         }
         self.addMessageLabel()
         self.addActivityIndicator()
+        
+        self.createSearchBarHandler()
         self.addSearchBar()
+        
         self.createCollectionViewHandler()
         self.addCollectionView()
+        
         self.addRefreshControl()
         self.areElementsCreated = true
     }
@@ -120,26 +130,51 @@ extension FeedViewPresenter: FeedViewPresenterProtocol{
     
     func showItems(items: [Photo]) {
         
-        if self.currentState == ViewState.ContentLoadingViaPullToRefresh{
-            self.refreshControl?.endRefreshing()
-            self.feedItems = items
+        if let currentState = self.currentState{
+            switch currentState {
             
-        }else{
-            let itemCount = self.feedItems.count
-            let indexPaths: [NSIndexPath] = Array(itemCount ..< itemCount + items.count).map { (index) -> NSIndexPath in
-                return NSIndexPath(forRow: index, inSection: 0)
-            }
+            case .ContentLoadingInitially, .ContentLoadingViaSearch:
+                self.refreshControl?.endRefreshing()
+                self.feedItems = items
+                self.feedCollectionView?.reloadData()
             
-            self.feedItems.appendContentsOf(items)
-            self.feedCollectionView?.performBatchUpdates({
-                self.feedCollectionView?.insertItemsAtIndexPaths(indexPaths)
+            case .ContentLoadingViaScroll:
+                let itemCount = self.feedItems.count
+                let indexPaths: [NSIndexPath] = Array(itemCount ..< itemCount + items.count).map { (index) -> NSIndexPath in
+                    return NSIndexPath(forRow: index, inSection: 0)
+                }
+                
+                self.feedItems.appendContentsOf(items)
+                self.feedCollectionView?.performBatchUpdates({
+                    self.feedCollectionView?.insertItemsAtIndexPaths(indexPaths)
                 }, completion: nil)
+            
+            default: break
+            }
         }
         self.currentState = ViewState.ContentLoaded
     }
     
     func willDisplayLastElementOfFeed() {
-        self.controller?.willDisplayLastElementOfFeed()
+        if ViewState.ContentLoadingViaSearch == self.currentState{
+            if let searchText = self.searchBar?.text{
+                self.currentState = ViewState.ContentLoadingViaScroll
+                self.controller?.willDisplayLastElementOfSearch(searchText)
+            }
+        }else{
+            self.currentState = ViewState.ContentLoadingViaScroll
+            self.controller?.willDisplayLastElementOfFeed()
+        }
+    }
+    
+    func searchBarTextDidChange(text: String) {
+        self.currentState = ViewState.ContentLoadingViaSearch
+        self.controller?.searchBarTextDidChange(text)
+    }
+    
+    func searchCancelled() {
+        self.currentState = ViewState.ContentLoadingInitially
+        self.controller?.searchCancelled()
     }
 }
 
@@ -167,18 +202,21 @@ extension FeedViewPresenter: FeedViewPresenterUICreationProtocol{
     }
     
     private func addSearchBar(){
-        let bar = UISearchBar()
-        bar.tintColor = UIColor.cyanColor()
-        
-        self.view.addSubview(bar)
-        bar.snp_makeConstraints { (make) in
-            if let controller = self.controller{
-                make.top.equalTo(controller.snp_topLayoutGuideBottom)
+        self.searchBar = UISearchBar()
+        if let searchBar = self.searchBar{
+            searchBar.placeholder = NSLocalizedString("Type a query", comment: "")
+            searchBar.showsCancelButton = true
+            searchBar.delegate = self.searchBarHandler
+            
+            self.view.addSubview(searchBar)
+            searchBar.snp_makeConstraints { (make) in
+                if let controller = self.controller{
+                    make.top.equalTo(controller.snp_topLayoutGuideBottom)
+                }
+                make.left.equalTo(self.view)
+                make.width.equalTo(self.view)
             }
-            make.left.equalTo(self.view)
-            make.width.equalTo(self.view)
         }
-        self.searchBar = bar
     }
     
     private func addCollectionView(){
@@ -219,5 +257,9 @@ extension FeedViewPresenter: FeedViewPresenterUICreationProtocol{
                                                                                         cellIdentifier: String(FeedCell),
                                                                                         owner: self)
         self.collectionViewHandler = FeedCollectionViewHandler(with: collectionViewHandlerConfiguration)
+    }
+    
+    private func createSearchBarHandler(){
+        self.searchBarHandler = FeedSearchBarHandler(with: self)
     }
 }

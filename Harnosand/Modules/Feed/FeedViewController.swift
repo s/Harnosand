@@ -15,6 +15,9 @@ protocol FeedViewProtocol{
     func showMessage(message: String)
     func loadedItems(newItems: [Photo])
     func willDisplayLastElementOfFeed()
+    func searchBarTextDidChange(text: String)
+    func willDisplayLastElementOfSearch(keyword:String)
+    func searchCancelled()
 }
 
 //MARK: Class: FeedViewController
@@ -49,7 +52,19 @@ class FeedViewController: UIViewController, FeedViewProtocol {
         self.dataPresenter?.loadFeedInitially()
     }
     
-    func willDisplayLastElementOfFeed() {
+    func willDisplayLastElementOfFeed(){
         self.dataPresenter?.loadNextFeed()
+    }
+    
+    func searchBarTextDidChange(text: String){
+        self.dataPresenter?.searchInitially(forKeyword: text)
+    }
+    
+    func willDisplayLastElementOfSearch(keyword:String){
+        self.dataPresenter?.searchNextPage(forKeyword: keyword)
+    }
+    
+    func searchCancelled() {
+        self.dataPresenter?.loadFeedInitially()
     }
 }
