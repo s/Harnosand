@@ -204,7 +204,7 @@ extension FeedViewPresenter: FeedViewPresenterUICreationProtocol{
     private func addSearchBar(){
         self.searchBar = UISearchBar()
         if let searchBar = self.searchBar{
-            searchBar.placeholder = NSLocalizedString("Type a query", comment: "")
+            searchBar.placeholder = NSLocalizedString("Search", comment: "")
             searchBar.showsCancelButton = true
             searchBar.delegate = self.searchBarHandler
             
