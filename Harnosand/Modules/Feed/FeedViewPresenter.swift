@@ -21,6 +21,7 @@ protocol FeedViewPresenterProtocol{
     func willDisplayLastElementOfFeed()
     func searchBarTextDidChange(text:String)
     func searchCancelled()
+    func feedsCollectionViewWillBeginDragging()
 }
 
 //MARK: ViewState Enum
@@ -76,7 +77,7 @@ class FeedViewPresenter{
                     self.feedCollectionView?.hidden = false
                     
                 case .ShowingMessage:
-                    self.messageLabel?.hidden = false
+                    self.refreshControl?.endRefreshing()
                     self.activityIndicator?.hidden = true
                     self.feedCollectionView?.hidden = true
                     
@@ -176,6 +177,10 @@ extension FeedViewPresenter: FeedViewPresenterProtocol{
         self.currentState = ViewState.ContentLoadingInitially
         self.controller?.searchCancelled()
     }
+    
+    func feedsCollectionViewWillBeginDragging() {
+        self.searchBar?.resignFirstResponder()
+    }
 }
 
 extension FeedViewPresenter: FeedViewPresenterUICreationProtocol{
@@ -205,7 +210,6 @@ extension FeedViewPresenter: FeedViewPresenterUICreationProtocol{
         self.searchBar = UISearchBar()
         if let searchBar = self.searchBar{
             searchBar.placeholder = NSLocalizedString("Search", comment: "")
-            searchBar.showsCancelButton = true
             searchBar.delegate = self.searchBarHandler
             
             self.view.addSubview(searchBar)

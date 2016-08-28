@@ -77,6 +77,10 @@ extension FeedCollectionViewHandler: UICollectionViewDelegate{
             owner?.willDisplayLastElementOfFeed()
         }
     }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        owner?.feedsCollectionViewWillBeginDragging()
+    }
 }
 
 //MARK: Extension: UICollectionViewDelegateFlowLayout Methods
